@@ -1,6 +1,6 @@
 #include "tallybench_header.h"
 
-void run_history_based_simulation(Inputs in, double *** tallies)
+void run_history_based_simulation(Inputs in, double *** tallies, int * num_nucs, int ** mats, double ** concs)
 {
 
 	// Particle History Loop

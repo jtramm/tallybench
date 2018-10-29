@@ -56,7 +56,7 @@ void print_results( Inputs in, int mype, double runtime, int nprocs, unsigned lo
 void print_inputs(Inputs in, int nprocs, int version )
 {
 	// Calculate Estimate of Memory Usage
-	int mem_tot = estimate_mem_usage( in );
+	double mem_tot = estimate_mem_usage( in );
 	logo(version);
 	center_print("INPUT SUMMARY", 79);
 	border_print();
@@ -79,10 +79,7 @@ void print_inputs(Inputs in, int nprocs, int version )
 	}
 	printf("Total Tallies:                "); fancy_int(in.total_tallies);
 	printf("Threads:                      %d\n", in.threads);
-	printf("Est. Memory Usage (MB):       "); fancy_int(mem_tot);
-	border_print();
-	center_print("INITIALIZATION - DO NOT PROFILE", 79);
-	border_print();
+	printf("Est. Memory Usage (MB):       %.0lf\n", mem_tot);
 }
 
 void border_print(void)

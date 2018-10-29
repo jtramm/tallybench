@@ -3,9 +3,12 @@
 double *** d3darr_contiguous(size_t l, size_t m, size_t n)
 {
     int i, j;
-    double *inner = malloc(l*m*n*sizeof(double));
+    double *inner = calloc(l*m*n,sizeof(double));
+	assert(inner != NULL );
     double **middle = malloc(l*m*sizeof(double*));
+	assert(middle != NULL);
     double ***matrix = malloc(l*sizeof(double**));
+	assert(matrix != NULL);
 
     for(i=0; i<l; i++){
         matrix[i] = middle;
@@ -32,15 +35,16 @@ double rn(unsigned long * seed)
 	return ret;
 }
 
-double rni(unsigned long * seed)
+int rni(unsigned long * seed)
 {
-	double ret;
+	int ret;
 	unsigned long n1;
 	unsigned long a = 16807;
 	unsigned long m = 2147483647;
 	n1 = ( a * (*seed) ) % m;
 	*seed = n1;
 	ret = n1 % m;
+	return ret;
 }
 
 unsigned int hash(char *str, int nbins)
@@ -54,9 +58,16 @@ unsigned int hash(char *str, int nbins)
 	return hash % nbins;
 }
 
-size_t estimate_mem_usage( Inputs in )
+double estimate_mem_usage( Inputs in )
 {
-	size_t memtotal = 1;
+	// Number of tally elements
+	size_t memtotal = (size_t) in.assemblies * (size_t) in.bins_per_assembly * (size_t) in.isotopes;
 
-	return memtotal;
+	// In bytes
+	memtotal *= sizeof(double);
+
+	// In MB
+	double MB = (double) memtotal / 1024.0 / 1024.0 ;
+
+	return MB;
 }

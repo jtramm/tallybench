@@ -31,7 +31,6 @@ int main( int argc, char* argv[] )
 	// =====================================================================
 
 	// Get material data
-	printf("Loading Mats...\n");
 	int *num_nucs  = load_num_nucs(in.isotopes);
 	int **mats     = load_mats(num_nucs, in.isotopes);
 	double **concs = load_concs(num_nucs, &seed);
@@ -41,10 +40,10 @@ int main( int argc, char* argv[] )
 	// Cross Section (XS) Parallel Lookup Simulation
 	// =====================================================================
 
-	printf("\n");
 	border_print();
 	center_print("SIMULATION", 79);
 	border_print();
+	printf("Simulating tally events...\n");
 
 	omp_start = omp_get_wtime();
 
@@ -53,7 +52,7 @@ int main( int argc, char* argv[] )
 	{
 	}
 	else if( in.simulation_method == HISTORY_BASED )
-		run_history_based_simulation(in);
+		run_history_based_simulation(in, tallies, num_nucs, mats, concs );
 
 	printf("\n" );
 	printf("Simulation complete.\n" );

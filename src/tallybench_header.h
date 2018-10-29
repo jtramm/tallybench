@@ -31,7 +31,7 @@ typedef struct{
 // Function Prototypes
 
 // simulation.c
-void run_history_based_simulation(Inputs in);
+void run_history_based_simulation(Inputs in, double *** tallies, int * num_nucs, int ** mats, double ** concs);
 
 // materials.c
 int * load_num_nucs(long isotopes);
@@ -52,7 +52,7 @@ Inputs read_CLI( int argc, char * argv[] );
 // xsutils.c
 double *** d3darr_contiguous(size_t l, size_t m, size_t n);
 double rn(unsigned long * seed);
-double rni(unsigned long * seed);
-size_t estimate_mem_usage( Inputs in );
+int rni(unsigned long * seed);
+double estimate_mem_usage( Inputs in );
 
 #endif
