@@ -31,10 +31,6 @@ int ** load_mats( int * num_nucs, long n_isotopes )
 	for( int i = 0; i < 12; i++ )
 		mats[i] = (int *) malloc(num_nucs[i] * sizeof(int) );
 
-	// Small H-M has 34 fuel nuclides
-	int mats0_Sml[] =  { 58, 59, 60, 61, 40, 42, 43, 44, 45, 46, 1, 2, 3, 7,
-	                 8, 9, 10, 29, 57, 47, 48, 0, 62, 15, 33, 34, 52, 53, 
-	                 54, 55, 56, 18, 23, 41 }; //fuel
 	// Large H-M has 300 fuel nuclides
 	int mats0_Lrg[321] =  { 58, 59, 60, 61, 40, 42, 43, 44, 45, 46, 1, 2, 3, 7,
 	                 8, 9, 10, 29, 57, 47, 48, 0, 62, 15, 33, 34, 52, 53,

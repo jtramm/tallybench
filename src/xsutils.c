@@ -1,5 +1,24 @@
 #include "tallybench_header.h"
 
+double pairwise_sum_dbl( double * v, long len )
+{
+	double sum = 0;
+	if( len <= 16 )
+	{
+		for( long i = 0; i < len; i++ )
+			sum += v[i];
+	}
+	else
+	{
+		long left_len = len / 2;
+		long right_len = len - left_len;
+		double left_sum = pairwise_sum_dbl( v, left_len );
+		double right_sum = pairwise_sum_dbl( v+left_len, right_len );
+		sum += left_sum + right_sum;
+	}
+	return sum;
+}
+
 double *** d3darr_contiguous(size_t l, size_t m, size_t n)
 {
     int i, j;

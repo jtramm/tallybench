@@ -4,6 +4,7 @@ void run_history_based_simulation(Inputs in, double *** tallies, int * num_nucs,
 {
 
 	// Particle History Loop
+	#pragma omp parallel for
 	for( int p = 0; p < in.particles; p++ )
 	{
 		unsigned long int seed = (p+1) * 13371337;
@@ -43,9 +44,15 @@ void run_history_based_simulation(Inputs in, double *** tallies, int * num_nucs,
 
 				// Compute Score
 				double score = micro_xs * rho * phi * weight;
+				//printf("micro_xs = %lf rho = %lf phi = %lf weight = %lf\n", micro_xs, rho, phi, weight);
+				//printf("tallying score = %lf\n", score);
+				
+				// Normalize Score by number of tallies
+				//score /= in.total_tallies;
 
 				// Tally score to global array
 				// TODO: make atomic
+				#pragma omp atomic
 				tallies[assembly][bin][idx] += score;
 
 				// Accumulate score
@@ -53,7 +60,7 @@ void run_history_based_simulation(Inputs in, double *** tallies, int * num_nucs,
 			}
 
 			// Reduce particle weight based on score
-			weight -= total_score;
+			weight *= 1.0/total_score;
 		}	
 	}
 }

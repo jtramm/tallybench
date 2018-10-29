@@ -50,6 +50,7 @@ void print_CLI_error(void);
 Inputs read_CLI( int argc, char * argv[] );
 
 // xsutils.c
+double pairwise_sum_dbl( double * v, long len );
 double *** d3darr_contiguous(size_t l, size_t m, size_t n);
 double rn(unsigned long * seed);
 int rni(unsigned long * seed);

@@ -11,11 +11,7 @@ int main( int argc, char* argv[] )
 	unsigned long long vhash = 0;
 	int nprocs = 1;
 
-	#ifdef VERIFICATION
 	unsigned long int seed = 42;
-	#else
-	unsigned long int seed = time(NULL);
-	#endif
 
 	// Process CLI Fields -- store in "Inputs" structure
 	Inputs in = read_CLI( argc, argv );
@@ -62,6 +58,11 @@ int main( int argc, char* argv[] )
 	// =====================================================================
 	// Output Results & Finalize
 	// =====================================================================
+	
+	// Compute Verification Hash
+	long total_bins = (long) in.assemblies * (long) in.bins_per_assembly * (long) in.isotopes;
+	double total = pairwise_sum_dbl( tallies[0][0], total_bins );
+	printf("tallies sum = %lf\n", total);
 
 	// Print / Save Results and Exit
 	print_results( in, mype, omp_end-omp_start, nprocs, vhash );

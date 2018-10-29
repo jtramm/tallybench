@@ -4,6 +4,7 @@
 
 COMPILER    = gnu
 OPTIMIZE    = yes
+OPENMP      = yes
 DEBUG       = no
 PROFILE     = no
 VERIFY      = no
@@ -31,14 +32,20 @@ LDFLAGS = -lm
 # Regular gcc Compiler
 ifeq ($(COMPILER),gnu)
   CC = gcc
-  CFLAGS += -fopenmp -flto
+  CFLAGS += -flto
+  ifeq ($(OPENMP),yes)
+    CFLAGS += -fopenmp
+  endif
 endif
 
 # Intel Compiler
 ifeq ($(COMPILER),intel)
   CC = icc
-  CFLAGS += -qopenmp 
+  ifeq ($(OPENMP),yes)
+    CFLAGS += -qopenmp
+  endif
 endif
+
 
 # Debug Flags
 ifeq ($(DEBUG),yes)
