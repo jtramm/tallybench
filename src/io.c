@@ -5,13 +5,13 @@ void logo(int version)
 {
 	border_print();
 	printf(
-			" _______    _ _       ______                    _     \n"
-			"(_______)  | | |     (____  \\                  | |    \n"
-			"    _ _____| | |_   _ ____)  )_____ ____   ____| |__  \n"
-			"   | (____ | | | | | |  __  (| ___ |  _ \\ / ___)  _ \\ \n"
-			"   | / ___ | | | |_| | |__)  ) ____| | | ( (___| | | |\n"
-			"   |_\\_____|\\_)_)__  |______/|_____)_| |_|\\____)_| |_|\n"
-			"               (____/                                 \n\n"
+			"             _______    _ _       ______                    _     \n"
+			"            (_______)  | | |     (____  \\                  | |    \n"
+			"                _ _____| | |_   _ ____)  )_____ ____   ____| |__  \n"
+			"               | (____ | | | | | |  __  (| ___ |  _ \\ / ___)  _ \\ \n"
+			"               | / ___ | | | |_| | |__)  ) ____| | | ( (___| | | |\n"
+			"               |_\\_____|\\_)_)__  |______/|_____)_| |_|\\____)_| |_|\n"
+			"                           (____/                                 \n\n"
 		  );
 	border_print();
 	center_print("Developed at Argonne National Laboratory", 79);
@@ -44,7 +44,7 @@ void print_results( Inputs in, int mype, double runtime, int nprocs, unsigned lo
 	border_print();
 
 	// Print the results
-	printf("Threads:     %d\n", in.nthreads);
+	printf("Threads:     %d\n", in.threads);
 	printf("Runtime:     %.3lf seconds\n", runtime);
 	printf("Tallies:     "); fancy_int(in.total_tallies);
 	printf("Tallies/s:   ");
@@ -69,14 +69,16 @@ void print_inputs(Inputs in, int nprocs, int version )
 		printf("Simulation Method:            History Based\n");
 
 	printf("Materials:                    %d\n", 12);
-	printf("Total Nuclides:               %ld\n", in.isotopes);
+	printf("Total Nuclides:               %d\n", in.isotopes);
+	printf("Reactor Assemblies:           %d\n", in.assemblies);
+	printf("Bins per Assembly:            %d\n", in.bins_per_assembly);
 	if( in.simulation_method == HISTORY_BASED )
 	{
-		printf("Particle Histories:           ");   fancy_int(in.particles);
-		printf("Tally Events per Particle:      "); fancy_int(in.events_per_particle);
+	printf("Particle Histories:           "); fancy_int(in.particles);
+	printf("Tally Events per Particle:    "); fancy_int(in.events_per_particle);
 	}
-	printf("Total Tallies:             "); fancy_int(in.total_tallies);
-	printf("Threads:                      %d\n", in.nthreads);
+	printf("Total Tallies:                "); fancy_int(in.total_tallies);
+	printf("Threads:                      %d\n", in.threads);
 	printf("Est. Memory Usage (MB):       "); fancy_int(mem_tot);
 	border_print();
 	center_print("INITIALIZATION - DO NOT PROFILE", 79);
@@ -158,11 +160,11 @@ Inputs read_CLI( int argc, char * argv[] )
 	{
 		char * arg = argv[i];
 
-		// nthreads (-t)
+		// threads (-t)
 		if( strcmp(arg, "-t") == 0 )
 		{
 			if( ++i < argc )
-				input.nthreads = atoi(argv[i]);
+				input.threads = atoi(argv[i]);
 			else
 				print_CLI_error();
 		}
@@ -200,7 +202,6 @@ Inputs read_CLI( int argc, char * argv[] )
 			if( ++i < argc )
 			{
 				input.particles = atoi(argv[i]);
-				default_particles = 0;
 			}
 			else
 				print_CLI_error();
@@ -211,8 +212,8 @@ Inputs read_CLI( int argc, char * argv[] )
 
 	// Validate Input
 
-	// Validate nthreads
-	if( input.nthreads < 1 )
+	// Validate threads
+	if( input.threads < 1 )
 		print_CLI_error();
 
 	// Validate n_isotopes

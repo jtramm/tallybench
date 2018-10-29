@@ -21,7 +21,7 @@ int main( int argc, char* argv[] )
 	Inputs in = read_CLI( argc, argv );
 
 	// Set number of OpenMP Threads
-	omp_set_num_threads(in.nthreads); 
+	omp_set_num_threads(in.threads); 
 
 	// Print-out of Input Summary
 	print_inputs( in, nprocs, version );
@@ -35,6 +35,7 @@ int main( int argc, char* argv[] )
 	int *num_nucs  = load_num_nucs(in.isotopes);
 	int **mats     = load_mats(num_nucs, in.isotopes);
 	double **concs = load_concs(num_nucs, &seed);
+	double *** tallies = d3darr_contiguous(in.assemblies, in.bins_per_assembly, in.isotopes);
 
 	// =====================================================================
 	// Cross Section (XS) Parallel Lookup Simulation
@@ -65,6 +66,16 @@ int main( int argc, char* argv[] )
 
 	// Print / Save Results and Exit
 	print_results( in, mype, omp_end-omp_start, nprocs, vhash );
+
+	// Free stuff
+	free(num_nucs);
+	free(mats[0]);
+	free(mats);
+	free(concs[0]);
+	free(concs);
+	free(tallies[0][0]);
+	free(tallies[0]);
+	free(tallies);
 
 	return 0;
 }
