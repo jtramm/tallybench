@@ -8,7 +8,6 @@ int main( int argc, char* argv[] )
 	int version = 0;
 	int mype = 0;
 	double omp_start, omp_end;
-	unsigned long long vhash = 0;
 	int nprocs = 1;
 
 	unsigned long int seed = 42;
@@ -62,10 +61,13 @@ int main( int argc, char* argv[] )
 	// Compute Verification Hash
 	long total_bins = (long) in.assemblies * (long) in.bins_per_assembly * (long) in.isotopes;
 	double total = pairwise_sum_dbl( tallies[0][0], total_bins );
-	printf("tallies sum = %lf\n", total);
+	unsigned long long vhash = (unsigned long) total;
+	vhash = vhash % 1000000;
 
 	// Print / Save Results and Exit
 	print_results( in, mype, omp_end-omp_start, nprocs, vhash );
+
+	save_tallies(tallies, in.assemblies, in.bins_per_assembly, in.isotopes);  
 
 	// Free stuff
 	free(num_nucs);

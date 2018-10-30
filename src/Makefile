@@ -7,7 +7,6 @@ OPTIMIZE    = yes
 OPENMP      = yes
 DEBUG       = no
 PROFILE     = no
-VERIFY      = no
 
 #===============================================================================
 # Program name & source code list
@@ -62,11 +61,6 @@ endif
 # Optimization Flags
 ifeq ($(OPTIMIZE),yes)
   CFLAGS += -O3
-endif
-
-# Verification of results mode
-ifeq ($(VERIFY),yes)
-  CFLAGS += -DVERIFICATION
 endif
 
 #===============================================================================

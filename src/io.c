@@ -1,5 +1,25 @@
 #include "tallybench_header.h"
 
+void save_tallies( double *** tallies, int assemblies, int bins_per_assembly, int isotopes )
+{
+	FILE * fp = fopen("tallies.dat", "w");
+	for( int a = 0; a < assemblies; a++ )
+	{
+		for( int b = 0; b < bins_per_assembly; b++ )
+		{
+			for( int i = 0; i < isotopes; i++ )
+			{
+				fprintf(fp, "%.2le", tallies[a][b][i]);
+				if( i < isotopes -1 )
+					fprintf(fp, " ");
+			}
+			if( a < assemblies - 1 || b < bins_per_assembly - 1 )
+				fprintf(fp, "\n");
+		}
+	}
+	fclose(fp);
+}
+
 // Prints program logo
 void logo(int version)
 {
@@ -44,11 +64,16 @@ void print_results( Inputs in, int mype, double runtime, int nprocs, unsigned lo
 	border_print();
 
 	// Print the results
-	printf("Threads:     %d\n", in.threads);
-	printf("Runtime:     %.3lf seconds\n", runtime);
-	printf("Tallies:     "); fancy_int(in.total_tallies);
-	printf("Tallies/s:   ");
+	printf("Threads:           %d\n", in.threads);
+	printf("Runtime:           %.3lf seconds\n", runtime);
+	printf("Tallies:           "); fancy_int(in.total_tallies);
+	printf("Tallies/s:         ");
 	fancy_int(tallies_per_sec);
+	printf("Verification Hash: %llu", vhash);
+	if( vhash == 763175 )
+		printf(" (passed)\n");
+	else
+		printf(" (warning - unverified hash)\n");
 
 	border_print();
 }
@@ -71,13 +96,15 @@ void print_inputs(Inputs in, int nprocs, int version )
 	printf("Materials:                    %d\n", 12);
 	printf("Total Nuclides:               %d\n", in.isotopes);
 	printf("Reactor Assemblies:           %d\n", in.assemblies);
-	printf("Bins per Assembly:            %d\n", in.bins_per_assembly);
+	printf("Spatial Bins per Assembly:    %d\n", in.bins_per_assembly);
+	printf("Total Spatial bins:           "); fancy_int((unsigned long) in.assemblies * (unsigned long) in.bins_per_assembly);
+	printf("Total Tally bins:             "); fancy_int((unsigned long) in.assemblies * (unsigned long) in.bins_per_assembly * in.isotopes);
 	if( in.simulation_method == HISTORY_BASED )
 	{
 	printf("Particle Histories:           "); fancy_int(in.particles);
 	printf("Tally Events per Particle:    "); fancy_int(in.events_per_particle);
 	}
-	printf("Total Tallies:                "); fancy_int(in.total_tallies);
+	printf("Total Tally Events:           "); fancy_int(in.total_tallies);
 	printf("Threads:                      %d\n", in.threads);
 	printf("Est. Memory Usage (MB):       %.0lf\n", mem_tot);
 }

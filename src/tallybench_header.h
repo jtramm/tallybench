@@ -40,6 +40,7 @@ double ** load_concs( int * num_nucs, unsigned long * seed );
 int pick_mat( unsigned long * seed );
 
 // io.c
+void save_tallies( double *** tallies, int assemblies, int bins_per_assembly, int isotopes );
 void logo(int version);
 void center_print(const char *s, int width);
 void print_results( Inputs in, int mype, double runtime, int nprocs, unsigned long long vhash );

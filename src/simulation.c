@@ -4,7 +4,7 @@ void run_history_based_simulation(Inputs in, double *** tallies, int * num_nucs,
 {
 
 	// Particle History Loop
-	#pragma omp parallel for schedule(static)
+	#pragma omp parallel for schedule(dynamic, 100)
 	for( int p = 0; p < in.particles; p++ )
 	{
 		unsigned long seed = ((unsigned long) p+ (unsigned long)1)* (unsigned long) 13371337;
