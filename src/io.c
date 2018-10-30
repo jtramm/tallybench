@@ -78,7 +78,7 @@ void print_results( Inputs in, int mype, double runtime, int nprocs, unsigned lo
 	if( in.default_problem == MEDIUM )
 		expected = 183219;
 	else if( in.default_problem == LARGE )
-		expected = 1;
+		expected = 279233;
 	if( vhash == expected )
 		printf(" (passed)\n");
 	else
