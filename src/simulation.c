@@ -4,10 +4,10 @@ void run_history_based_simulation(Inputs in, double *** tallies, int * num_nucs,
 {
 
 	// Particle History Loop
-	#pragma omp parallel for
+	#pragma omp parallel for schedule(static)
 	for( int p = 0; p < in.particles; p++ )
 	{
-		unsigned long int seed = (p+1) * 13371337;
+		unsigned long seed = ((unsigned long) p+ (unsigned long)1)* (unsigned long) 13371337;
 
 		double weight = 1.0;
 
@@ -46,7 +46,7 @@ void run_history_based_simulation(Inputs in, double *** tallies, int * num_nucs,
 				double score = micro_xs * rho * phi * weight;
 				//printf("micro_xs = %lf rho = %lf phi = %lf weight = %lf\n", micro_xs, rho, phi, weight);
 				//printf("tallying score = %lf\n", score);
-				
+
 				// Normalize Score by number of tallies
 				//score /= in.total_tallies;
 
