@@ -30,6 +30,7 @@ int main( int argc, char* argv[] )
 	int **mats     = load_mats(num_nucs, in.isotopes);
 	double **concs = load_concs(num_nucs, &seed);
 	double *** tallies = d3darr_contiguous(in.assemblies, in.bins_per_assembly, in.isotopes);
+	int ** spatial_mats = initialize_spatial_mats(in, mats);
 
 	// =====================================================================
 	// Cross Section (XS) Parallel Lookup Simulation
@@ -47,7 +48,7 @@ int main( int argc, char* argv[] )
 	{
 	}
 	else if( in.simulation_method == HISTORY_BASED )
-		run_history_based_simulation(in, tallies, num_nucs, mats, concs );
+		run_history_based_simulation(in, tallies, num_nucs, mats, concs, spatial_mats );
 
 	printf("\n" );
 	printf("Simulation complete.\n" );

@@ -2,6 +2,18 @@
 // Note that there are 12 materials present in H-M (large or small)
 
 #include "tallybench_header.h"
+	
+// Initializes the spatial mesh of the reactor to materials with a distribution
+// similar to the Hoogenboom-Martin reactor
+int ** initialize_spatial_mats(Inputs in, int **mats)
+{
+	int ** spatial_mats = imatrix(in.assemblies, in.bins_per_assembly); 
+	unsigned long seed = 4242424242;
+	for( int a = 0; a < in.assemblies; a++ )
+		for( int b = 0; b < in.bins_per_assembly; b++ )
+			spatial_mats[a][b] = pick_mat(&seed); 
+	return spatial_mats;
+}
 
 // num_nucs represents the number of nuclides that each material contains
 int * load_num_nucs(long n_isotopes)

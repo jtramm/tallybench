@@ -32,13 +32,14 @@ typedef struct{
 // Function Prototypes
 
 // simulation.c
-void run_history_based_simulation(Inputs in, double *** tallies, int * num_nucs, int ** mats, double ** concs);
+void run_history_based_simulation(Inputs in, double *** tallies, int * num_nucs, int ** mats, double ** concs, int ** spatial_mats);
 
 // materials.c
 int * load_num_nucs(long isotopes);
 int ** load_mats( int * num_nucs, long isotopes );
 double ** load_concs( int * num_nucs, unsigned long * seed );
 int pick_mat( unsigned long * seed );
+int ** initialize_spatial_mats(Inputs in, int **mats);
 
 // io.c
 void save_tallies( double *** tallies, int assemblies, int bins_per_assembly, int isotopes );
@@ -53,6 +54,7 @@ Inputs read_CLI( int argc, char * argv[] );
 
 // xsutils.c
 double pairwise_sum_dbl( double * v, long len );
+int **imatrix(size_t m, size_t n);
 double *** d3darr_contiguous(size_t l, size_t m, size_t n);
 double rn(unsigned long * seed);
 int rni(unsigned long * seed);

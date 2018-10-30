@@ -1,6 +1,6 @@
 #include "tallybench_header.h"
 
-void run_history_based_simulation(Inputs in, double *** tallies, int * num_nucs, int ** mats, double ** concs)
+void run_history_based_simulation(Inputs in, double *** tallies, int * num_nucs, int ** mats, double ** concs, int ** spatial_mats)
 {
 
 	// Particle History Loop
@@ -21,8 +21,8 @@ void run_history_based_simulation(Inputs in, double *** tallies, int * num_nucs,
 			int bin = rni(&seed) % in.bins_per_assembly;
 
 			// Determine which material it is in
-			// TODO: look this up based on assembly and bin
-			int mat = pick_mat(&seed); 
+			//int mat = pick_mat(&seed); 
+			int mat = spatial_mats[assembly][bin];
 
 			// Pick phi
 			double phi = rn(&seed);
@@ -36,7 +36,7 @@ void run_history_based_simulation(Inputs in, double *** tallies, int * num_nucs,
 				// Find isotope index
 				int idx = mats[mat][n]; 
 
-				// TODO: look this up based on material and nuclide
+				// TODO: look this up based on material and nuclide (?)
 				double micro_xs = rn(&seed);
 
 				// Look up nuclide density in material
@@ -51,7 +51,6 @@ void run_history_based_simulation(Inputs in, double *** tallies, int * num_nucs,
 				//score /= in.total_tallies;
 
 				// Tally score to global array
-				// TODO: make atomic
 				#pragma omp atomic
 				tallies[assembly][bin][idx] += score;
 

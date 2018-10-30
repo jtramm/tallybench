@@ -19,6 +19,17 @@ double pairwise_sum_dbl( double * v, long len )
 	return sum;
 }
 
+int **imatrix(size_t m, size_t n)
+{
+	int i;
+	int **a = (int **) malloc(m*sizeof(int*));
+	int *b = (int *) malloc(n*m*sizeof(int));
+	for(i=0; i<m; i++){
+		a[i] = b+n*i;
+	}
+	return a;
+}
+
 double *** d3darr_contiguous(size_t l, size_t m, size_t n)
 {
     int i, j;
