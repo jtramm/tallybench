@@ -6,8 +6,11 @@
 #include<time.h>
 #include<string.h>
 #include<math.h>
-#include<omp.h>
 #include<assert.h>
+
+#ifdef OPENMP
+#include<omp.h>
+#endif
 
 #define EVENT_BASED 1
 #define HISTORY_BASED 2
@@ -52,7 +55,7 @@ void fancy_int( long a );
 void print_CLI_error(void);
 Inputs read_CLI( int argc, char * argv[] );
 
-// xsutils.c
+// utils.c
 double pairwise_sum_dbl( double * v, long len );
 double parallel_pairwise_sum_dbl( double * v, long len, int nthreads);
 double parallel_sum( double * v, long len );
@@ -61,5 +64,6 @@ double *** d3darr_contiguous(size_t l, size_t m, size_t n);
 double rn(unsigned long * seed);
 int rni(unsigned long * seed);
 double estimate_mem_usage( Inputs in );
+double get_time(void);
 
 #endif

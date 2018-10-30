@@ -22,19 +22,23 @@ double pairwise_sum_dbl( double * v, long len )
 double parallel_pairwise_sum_dbl( double * v, long len, int nthreads)
 {
 	double sum = 0;
-    #pragma omp parallel reduction(+:sum)
-    {
-        int tid = omp_get_thread_num();
-        long n = len / nthreads; // intentional floor
-        long extra = len % nthreads; // remainder
+	#ifdef OPENMP
+	#pragma omp parallel reduction(+:sum)
+	{
+		int tid = omp_get_thread_num();
+		long n = len / nthreads; // intentional floor
+		long extra = len % nthreads; // remainder
 
-        // Last thread gets the extra
-        double * start = v + n*tid;
-        if( tid == nthreads - 1 )
-            sum = pairwise_sum_dbl(start, n + extra);
-        else
-            sum = pairwise_sum_dbl(start, n);
-    }
+		// Last thread gets the extra
+		double * start = v + n*tid;
+		if( tid == nthreads - 1 )
+			sum = pairwise_sum_dbl(start, n + extra);
+		else
+			sum = pairwise_sum_dbl(start, n);
+	}
+	#else
+	sum = pairwise_sum_dbl(v, len);
+	#endif
 
 	return sum;
 }
@@ -129,4 +133,16 @@ double estimate_mem_usage( Inputs in )
 	double MB = (double) memtotal / 1024.0 / 1024.0 ;
 
 	return MB;
+}
+
+double get_time(void)
+{
+    #ifdef OPENMP
+    return omp_get_wtime();
+    #endif
+
+    time_t time;
+    time = clock();
+
+    return (double) time / (double) CLOCKS_PER_SEC;
 }

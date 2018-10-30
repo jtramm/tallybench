@@ -5,7 +5,7 @@
 COMPILER    = gnu
 OPTIMIZE    = yes
 OPENMP      = yes
-DEBUG       = no
+DEBUG       = yes
 PROFILE     = no
 
 #===============================================================================
@@ -33,7 +33,7 @@ ifeq ($(COMPILER),gnu)
   CC = gcc
   CFLAGS += -flto
   ifeq ($(OPENMP),yes)
-    CFLAGS += -fopenmp
+    CFLAGS += -fopenmp -DOPENMP
   endif
 endif
 
@@ -41,7 +41,7 @@ endif
 ifeq ($(COMPILER),intel)
   CC = icc
   ifeq ($(OPENMP),yes)
-    CFLAGS += -qopenmp
+    CFLAGS += -qopenmp -DOPENMP
   endif
 endif
 
