@@ -14,6 +14,8 @@ void run_history_based_simulation(Inputs in, double *** restrict tallies, int * 
 		// Tally Loop
 		for( int e = 0; e < in.events_per_particle; e++ )
 		{
+			// TODO: Use real ray tracer to determine location?
+
 			// Determine which assembly it is in
 			int assembly = rni(&seed) % in.assemblies; 
 

@@ -60,7 +60,7 @@ void center_print(const char *s, int width)
 void print_results( Inputs in, int mype, double runtime, int nprocs, unsigned long long vhash )
 {
 	// Calculate Lookups per sec
-	int tallies_per_sec = (int) ((double) in.total_tallies / runtime);
+	//int tallies_per_sec = (int) ((double) in.total_tallies / runtime);
 
 	// Print output
 	border_print();
@@ -70,9 +70,9 @@ void print_results( Inputs in, int mype, double runtime, int nprocs, unsigned lo
 	// Print the results
 	printf("Threads:           %d\n", in.threads);
 	printf("Runtime:           %.3lf seconds\n", runtime);
-	printf("Tallies:           "); fancy_int(in.total_tallies);
-	printf("Tallies/s:         ");
-	fancy_int(tallies_per_sec);
+	//printf("Tallies:           "); fancy_int(in.total_tallies);
+	printf("Tallies/s:         %.2le\n", (double)in.total_tallies/runtime);
+	//fancy_int(tallies_per_sec);
 	printf("Verification Hash: %llu", vhash);
 	unsigned long long expected = 841134;
 	if( in.default_problem == MEDIUM )
