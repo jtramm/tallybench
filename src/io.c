@@ -74,7 +74,7 @@ void print_results( Inputs in, int mype, double runtime, int nprocs, unsigned lo
 	printf("Tallies/s:         ");
 	fancy_int(tallies_per_sec);
 	printf("Verification Hash: %llu", vhash);
-	if( vhash == 763175 )
+	if( vhash == 841134 )
 		printf(" (passed)\n");
 	else
 		printf(" (warning - unverified hash)\n");
