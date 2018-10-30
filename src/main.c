@@ -50,7 +50,6 @@ int main( int argc, char* argv[] )
 	else if( in.simulation_method == HISTORY_BASED )
 		run_history_based_simulation(in, tallies, num_nucs, mats, concs, spatial_mats );
 
-	printf("\n" );
 	printf("Simulation complete.\n" );
 
 	omp_end = omp_get_wtime();
@@ -60,8 +59,10 @@ int main( int argc, char* argv[] )
 	// =====================================================================
 	
 	// Compute Verification Hash
+	printf("Verifying results...\n");
 	long total_bins = (long) in.assemblies * (long) in.bins_per_assembly * (long) in.isotopes;
-	double total = pairwise_sum_dbl( tallies[0][0], total_bins );
+	double total = parallel_pairwise_sum_dbl( tallies[0][0], total_bins, in.threads );
+	//double total = parallel_sum(tallies[0][0], total_bins);
 	unsigned long long vhash = (unsigned long) total;
 	vhash = vhash % 1000000;
 

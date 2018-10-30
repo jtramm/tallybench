@@ -74,7 +74,12 @@ void print_results( Inputs in, int mype, double runtime, int nprocs, unsigned lo
 	printf("Tallies/s:         ");
 	fancy_int(tallies_per_sec);
 	printf("Verification Hash: %llu", vhash);
-	if( vhash == 841134 )
+	unsigned long long expected = 841134;
+	if( in.default_problem == MEDIUM )
+		expected = 183219;
+	else if( in.default_problem == LARGE )
+		expected = 1;
+	if( vhash == expected )
 		printf(" (passed)\n");
 	else
 		printf(" (warning - unverified hash)\n");
@@ -89,14 +94,16 @@ void print_inputs(Inputs in, int nprocs, int version )
 	logo(version);
 	center_print("INPUT SUMMARY", 79);
 	border_print();
-	#ifdef VERIFICATION
-	printf("Verification Mode:            on\n");
-	#endif
 	if( in.simulation_method == EVENT_BASED )
 		printf("Simulation Method:            Event Based\n");
 	else
 		printf("Simulation Method:            History Based\n");
-
+	char * prob_size = "Small";
+	if( in.default_problem == MEDIUM )
+		prob_size = "Medium";
+	else if( in.default_problem == LARGE )
+		prob_size = "Large";
+	printf("Problem Size:                 %s\n", prob_size);
 	printf("Materials:                    %d\n", 12);
 	printf("Total Nuclides:               %d\n", in.isotopes);
 	printf("Reactor Assemblies:           %d\n", in.assemblies);
@@ -185,6 +192,8 @@ Inputs read_CLI( int argc, char * argv[] )
 
 	input.save_tallies = 0;
 
+	int custom_particles = 0;
+
 	// Collect Raw Input
 	for( int i = 1; i < argc; i++ )
 	{
@@ -226,19 +235,49 @@ Inputs read_CLI( int argc, char * argv[] )
 			else
 				print_CLI_error();
 		}
+		// Problem Size (-s)
+		else if( strcmp(arg, "-s") == 0 )
+		{
+			char * prob_size;
+			if( ++i < argc )
+				prob_size = argv[i];
+			else
+				print_CLI_error();
+
+			if( strcmp(prob_size, "small") == 0 )
+			{
+				input.default_problem = SMALL;
+			}
+			else if( strcmp(prob_size, "medium") == 0 )
+			{
+				input.default_problem = MEDIUM;
+				if( !custom_particles )
+					input.particles *= 10;
+				input.bins_per_assembly = 17*17*35;
+			}
+			else if( strcmp(prob_size, "large") == 0 )
+			{
+				input.default_problem = LARGE;
+				if( !custom_particles )
+					input.particles *= 100;
+				input.bins_per_assembly = 17*17*350;
+			}
+			else
+				print_CLI_error();
+		}
 		// particles (-p)
 		else if( strcmp(arg, "-p") == 0 )
 		{
 			if( ++i < argc )
 			{
 				input.particles = atoi(argv[i]);
+				custom_particles = 1;
 			}
 			else
 				print_CLI_error();
 		}
-		
-		// save tallies (-s)
-		else if( strcmp(arg, "-s") == 0 )
+		// save tallies to file (-f)
+		else if( strcmp(arg, "-f") == 0 )
 		{
 			input.save_tallies = 1;
 		}

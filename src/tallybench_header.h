@@ -54,6 +54,8 @@ Inputs read_CLI( int argc, char * argv[] );
 
 // xsutils.c
 double pairwise_sum_dbl( double * v, long len );
+double parallel_pairwise_sum_dbl( double * v, long len, int nthreads);
+double parallel_sum( double * v, long len );
 int **imatrix(size_t m, size_t n);
 double *** d3darr_contiguous(size_t l, size_t m, size_t n);
 double rn(unsigned long * seed);

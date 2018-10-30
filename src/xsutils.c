@@ -19,6 +19,35 @@ double pairwise_sum_dbl( double * v, long len )
 	return sum;
 }
 
+double parallel_pairwise_sum_dbl( double * v, long len, int nthreads)
+{
+	double sum = 0;
+    #pragma omp parallel reduction(+:sum)
+    {
+        int tid = omp_get_thread_num();
+        long n = len / nthreads; // intentional floor
+        long extra = len % nthreads; // remainder
+
+        // Last thread gets the extra
+        double * start = v + n*tid;
+        if( tid == nthreads - 1 )
+            sum = pairwise_sum_dbl(start, n + extra);
+        else
+            sum = pairwise_sum_dbl(start, n);
+    }
+
+	return sum;
+}
+
+double parallel_sum( double * v, long len )
+{
+	double sum = 0.0;
+	#pragma omp parallel for reduction(+:sum)
+	for( long i = 0; i < len; i++ )
+		sum += v[i];
+	return sum;
+}
+
 int **imatrix(size_t m, size_t n)
 {
 	int i;
