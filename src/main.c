@@ -67,7 +67,8 @@ int main( int argc, char* argv[] )
 	// Print / Save Results and Exit
 	print_results( in, mype, omp_end-omp_start, nprocs, vhash );
 
-	save_tallies(tallies, in.assemblies, in.bins_per_assembly, in.isotopes);  
+	if( in.save_tallies )
+		save_tallies(tallies, in.assemblies, in.bins_per_assembly, in.isotopes);  
 
 	// Free stuff
 	free(num_nucs);

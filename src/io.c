@@ -2,7 +2,10 @@
 
 void save_tallies( double *** tallies, int assemblies, int bins_per_assembly, int isotopes )
 {
-	FILE * fp = fopen("tallies.dat", "w");
+	char * fname = "tallies.dat";
+	printf("Saving tallies to %s...", fname);
+	fflush(stdout);
+	FILE * fp = fopen(fname, "w");
 	for( int a = 0; a < assemblies; a++ )
 	{
 		for( int b = 0; b < bins_per_assembly; b++ )
@@ -18,6 +21,7 @@ void save_tallies( double *** tallies, int assemblies, int bins_per_assembly, in
 		}
 	}
 	fclose(fp);
+	printf(" done!\n");
 }
 
 // Prints program logo
@@ -179,6 +183,8 @@ Inputs read_CLI( int argc, char * argv[] )
 
 	input.default_problem = SMALL;
 
+	input.save_tallies = 0;
+
 	// Collect Raw Input
 	for( int i = 1; i < argc; i++ )
 	{
@@ -229,6 +235,12 @@ Inputs read_CLI( int argc, char * argv[] )
 			}
 			else
 				print_CLI_error();
+		}
+		
+		// save tallies (-s)
+		else if( strcmp(arg, "-s") == 0 )
+		{
+			input.save_tallies = 1;
 		}
 		else
 			print_CLI_error();

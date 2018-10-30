@@ -70,7 +70,7 @@ endif
 $(program): $(obj) tallybench_header.h Makefile
 	$(CC) $(CFLAGS) $(obj) -o $@ $(LDFLAGS)
 
-%.o: %.c Makefile
+%.o: %.c Makefile tallybench_header.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:

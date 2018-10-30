@@ -26,6 +26,7 @@ typedef struct{
 	int total_tallies;
 	int simulation_method; // Event or History
 	int default_problem;
+	int save_tallies;
 } Inputs;
 
 // Function Prototypes
