@@ -35,7 +35,7 @@ typedef struct{
 // Function Prototypes
 
 // simulation.c
-void run_history_based_simulation(Inputs in, double *** restrict tallies, int * restrict num_nucs, int ** restrict mats, double ** restrict concs, int ** restrict spatial_mats)
+void run_history_based_simulation(Inputs in, double *** restrict tallies, int * restrict num_nucs, int ** restrict mats, double ** restrict concs, int ** restrict spatial_mats);
 
 // materials.c
 int * load_num_nucs(long isotopes);
