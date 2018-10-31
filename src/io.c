@@ -59,9 +59,6 @@ void center_print(const char *s, int width)
 
 void print_results( Inputs in, int mype, double runtime, int nprocs, unsigned long long vhash )
 {
-	// Calculate Lookups per sec
-	//int tallies_per_sec = (int) ((double) in.total_tallies / runtime);
-
 	// Print output
 	border_print();
 	center_print("RESULTS", 79);
@@ -70,9 +67,7 @@ void print_results( Inputs in, int mype, double runtime, int nprocs, unsigned lo
 	// Print the results
 	printf("Threads:           %d\n", in.threads);
 	printf("Runtime:           %.3lf seconds\n", runtime);
-	//printf("Tallies:           "); fancy_int(in.total_tallies);
 	printf("Tallies/s:         %.2le\n", (double)in.total_tallies/runtime);
-	//fancy_int(tallies_per_sec);
 	printf("Verification Hash: %llu", vhash);
 	unsigned long long expected = 841134;
 	if( in.default_problem == MEDIUM )
@@ -189,8 +184,8 @@ Inputs read_CLI( int argc, char * argv[] )
 	input.assemblies = 241;
 	input.bins_per_assembly = 17*17;
 
-	// defaults to 34
-	input.events_per_particle = 34;
+	// defaults to 98
+	input.events_per_particle = 98;
 
 	input.default_problem = SMALL;
 
