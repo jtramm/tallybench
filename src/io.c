@@ -65,15 +65,15 @@ void print_results( Inputs in, int mype, double runtime, int nprocs, unsigned lo
 	border_print();
 
 	// Print the results
-	printf("Threads:           %d\n", in.threads);
-	printf("Runtime:           %.3lf seconds\n", runtime);
-	printf("Tallies/s:         %.2le\n", (double)in.total_tallies/runtime);
-	printf("Verification Hash: %llu", vhash);
-	unsigned long long expected = 841134;
+	printf("Threads:      %d\n", in.threads);
+	printf("Runtime:      %.3lf seconds\n", runtime);
+	printf("Tallies/s:    %.2le\n", (double)in.total_tallies/runtime);
+	printf("Checksum:     %llu", vhash);
+	unsigned long long expected = 103752;
 	if( in.default_problem == MEDIUM )
-		expected = 183219;
+		expected = 566873;
 	else if( in.default_problem == LARGE )
-		expected = 279233;
+		expected = 283547;
 	if( vhash == expected )
 		printf(" (passed)\n");
 	else
