@@ -1,6 +1,6 @@
 #include "tallybench_header.h"
 
-void run_history_based_simulation(Inputs in, double *** restrict tallies, int * restrict num_nucs, int ** restrict mats, double ** restrict concs, int ** restrict spatial_mats)
+void run_history_based_simulation(Inputs in, double *** restrict tallies, int * restrict num_nucs, int ** restrict mats, double ** restrict concs, int ** restrict spatial_mats, Reactor_Mesh * restrict RM)
 {
 
 	// Particle History Loop
@@ -14,16 +14,20 @@ void run_history_based_simulation(Inputs in, double *** restrict tallies, int * 
 		// Tally Loop
 		for( int e = 0; e < in.events_per_particle; e++ )
 		{
-			// TODO: Use real ray tracer to determine location?
+			// Sample location randomly from reactor mesh
+			Coord location = sample_random_location( RM, &seed );
 
 			// Determine which assembly it is in
-			int assembly = rni(&seed) % in.assemblies; 
+			int assembly = find_assembly_id( RM, location ); 
+			//int assembly = rni(&seed) % in.assemblies; 
 
 			// Determine which bin it is in
-			int bin = rni(&seed) % in.bins_per_assembly;
+			int bin = find_pin_id( RM, assembly, location );
+			//int bin = rni(&seed) % in.bins_per_assembly;
 
 			// Determine which material it is in
 			//int mat = pick_mat(&seed); 
+			//TODO: read from reactor mesh instead
 			int mat = spatial_mats[assembly][bin];
 
 			// Pick phi

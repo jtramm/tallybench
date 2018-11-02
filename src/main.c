@@ -31,11 +31,12 @@ int main( int argc, char* argv[] )
 	int *num_nucs  = load_num_nucs(in.isotopes);
 	int **mats     = load_mats(num_nucs, in.isotopes);
 	double **concs = load_concs(num_nucs, &seed);
+	Reactor_Mesh * RM = build_reactor_mesh();
 	double *** tallies = d3darr_contiguous(in.assemblies, in.bins_per_assembly, in.isotopes);
 	int ** spatial_mats = initialize_spatial_mats(in, mats);
 
 	// =====================================================================
-	// Cross Section (XS) Parallel Lookup Simulation
+	// Parallel Tally Simulation
 	// =====================================================================
 
 	border_print();
@@ -50,7 +51,7 @@ int main( int argc, char* argv[] )
 	{
 	}
 	else if( in.simulation_method == HISTORY_BASED )
-		run_history_based_simulation(in, tallies, num_nucs, mats, concs, spatial_mats );
+		run_history_based_simulation(in, tallies, num_nucs, mats, concs, spatial_mats, RM );
 
 	printf("Simulation complete.\n" );
 

@@ -1,30 +1,54 @@
 #include "tallybench_header.h"
 
-typedef struct{
-	double x;
-	doubly y;
-} Coord;
+Coord sample_random_location( Reactor_Mesh * RM, unsigned long * seed )
+{
+	// Pick a random assembly
+	int assembly_id = rni(seed) % RM->valid_assemblies;
+	Assembly_Mesh * AM = &RM->assemblies[assembly_id];
 
-typedef struct{
-	int N;
-	int ** material_ids;
-	double pin_pitch;
-	Coord lower_left;
-} Assembly_mesh;
+	// Sample a location randomly within assembly
+	Coord loc;
+	loc.x = AM->lower_left.x + rn(seed) * AM->N * AM->pin_pitch;
+	loc.y = AM->lower_left.y + rn(seed) * AM->N * AM->pin_pitch;
 
-typedef struct{
-	int N;
-	int ** assembly_ids;
-	double assembly_pitch;
-	Assembly_Mesh * assemblies;
-	Coord lower_left;
-} Reactor_Mesh;
+	return loc;
+}
+
+
+long find_pin_id( Reactor_Mesh * RM, int assembly_id, Coord p )
+{
+	Assembly_Mesh * AM = &RM->assemblies[assembly_id];
+
+	// Convert particle location into assembly frame of reference
+	p.x -= AM->lower_left.x;
+	p.y -= AM->lower_left.y;
+
+	// Find coordinates (intentional floor via cast)
+	int x_idx = p.x / AM->pin_pitch;
+	int y_idx = p.y / AM->pin_pitch;
+
+	long pin_id = y_idx * AM->N + x_idx;
+
+	return pin_id;
+}
+
+long find_assembly_id( Reactor_Mesh * RM, Coord p )
+{
+	// Find coordinates (intentional floor via cast)
+	int x_idx = p.x / RM->assembly_pitch;
+	int y_idx = p.y / RM->assembly_pitch;
+
+	// Lookup Assembly id
+	long assembly_id = RM->assembly_ids[y_idx][x_idx];
+
+	return assembly_id;
+}
 
 Reactor_Mesh * build_reactor_mesh(void)
 {
 	Reactor_Mesh * RM = malloc(sizeof(Reactor_Mesh));
 
-	RM->N = N;
+	RM->N = 17;
 	RM->lower_left.x = 0.0;
 	RM->lower_left.y = 0.0;
 	RM->assembly_pitch = 17*1.26;
@@ -72,6 +96,7 @@ Reactor_Mesh * build_reactor_mesh(void)
 
 	// Allocate room for actual number of assemblies
 	RM->assemblies = malloc(id * sizeof(Assembly_Mesh));
+	RM->valid_assemblies = id;
 	id = 0;
 	Coord lower_left = {0, 0};
 	for( int i = 0 ; i < RM->N; i++ )
@@ -81,16 +106,16 @@ Reactor_Mesh * build_reactor_mesh(void)
 			// For a valid assembly, 
 			if( RM->assembly_ids[i][j] != -1 )
 			{
-				RM->assemblies[id].N = RN->N;
+				RM->assemblies[id].N = RM->N;
 				RM->assemblies[id].pin_pitch = 1.26;
-				RM->assemblies[id].material_ids = imatrix(RN->N, RN->N);
+				RM->assemblies[id].material_ids = imatrix(RM->N, RM->N);
 				RM->assemblies[id].lower_left = lower_left;
 
 				// Fill assembly with random materials (from realistic distribution)
 				unsigned long seed = 42;
-				for( int k = 0; k < RN->N; k++ )
-					for( int l = 0; l < RN->N; l++ )
-						RM->assemblies[id].materials_ids[k][l] = pick_mat(&seed);
+				for( int k = 0; k < RM->N; k++ )
+					for( int l = 0; l < RM->N; l++ )
+						RM->assemblies[id].material_ids[k][l] = pick_mat(&seed);
 			}
 			id++;
 			lower_left.x += RM->assembly_pitch;
@@ -99,5 +124,5 @@ Reactor_Mesh * build_reactor_mesh(void)
 		lower_left.y += RM->assembly_pitch;
 	}
 
-
+	return RM;
 }

@@ -34,7 +34,7 @@ typedef struct{
 
 typedef struct{
 	double x;
-	doubly y;
+	double y;
 } Coord;
 
 typedef struct{
@@ -42,7 +42,7 @@ typedef struct{
 	int ** material_ids;
 	double pin_pitch;
 	Coord lower_left;
-} Assembly_mesh;
+} Assembly_Mesh;
 
 typedef struct{
 	int N;
@@ -50,12 +50,19 @@ typedef struct{
 	double assembly_pitch;
 	Assembly_Mesh * assemblies;
 	Coord lower_left;
+	int valid_assemblies;
 } Reactor_Mesh;
 
 // Function Prototypes
 
 // simulation.c
-void run_history_based_simulation(Inputs in, double *** restrict tallies, int * restrict num_nucs, int ** restrict mats, double ** restrict concs, int ** restrict spatial_mats);
+void run_history_based_simulation(Inputs in, double *** restrict tallies, int * restrict num_nucs, int ** restrict mats, double ** restrict concs, int ** restrict spatial_mats, Reactor_Mesh * restrict RM);
+
+// mesh.c
+long find_pin_id( Reactor_Mesh * RM, int assembly_id, Coord p );
+long find_assembly_id( Reactor_Mesh * RM, Coord p );
+Reactor_Mesh * build_reactor_mesh(void);
+Coord sample_random_location( Reactor_Mesh * RM, unsigned long * seed );
 
 // materials.c
 int * load_num_nucs(long isotopes);
