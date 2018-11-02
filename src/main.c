@@ -32,8 +32,9 @@ int main( int argc, char* argv[] )
 	int **mats     = load_mats(num_nucs, in.isotopes);
 	double **concs = load_concs(num_nucs, &seed);
 	Reactor_Mesh * RM = build_reactor_mesh();
-	double *** tallies = d3darr_contiguous(in.assemblies, in.bins_per_assembly, in.isotopes);
-	int ** spatial_mats = initialize_spatial_mats(in, mats);
+	double *** tallies = d3darr_contiguous(RM->valid_assemblies, RM->assemblies[0].N * RM->assemblies[0].N, in.isotopes);
+	//int ** spatial_mats = initialize_spatial_mats(in, mats);
+	int ** spatial_mats = NULL;
 
 	// =====================================================================
 	// Parallel Tally Simulation

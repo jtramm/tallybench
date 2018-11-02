@@ -92,12 +92,11 @@ Reactor_Mesh * build_reactor_mesh(void)
 		}
 	}
 
-	printf("allocating space for %d assemblies...\n", id);
-
 	// Allocate room for actual number of assemblies
 	RM->assemblies = malloc(id * sizeof(Assembly_Mesh));
 	RM->valid_assemblies = id;
 	id = 0;
+	RM->total_spatial_bins = 0;
 	Coord lower_left = {0, 0};
 	for( int i = 0 ; i < RM->N; i++ )
 	{
@@ -115,9 +114,12 @@ Reactor_Mesh * build_reactor_mesh(void)
 				unsigned long seed = 42;
 				for( int k = 0; k < RM->N; k++ )
 					for( int l = 0; l < RM->N; l++ )
+					{
 						RM->assemblies[id].material_ids[k][l] = pick_mat(&seed);
+						(RM->total_spatial_bins)++;
+					}
+				id++;
 			}
-			id++;
 			lower_left.x += RM->assembly_pitch;
 		}
 		lower_left.x = 0;

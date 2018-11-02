@@ -51,6 +51,7 @@ typedef struct{
 	Assembly_Mesh * assemblies;
 	Coord lower_left;
 	int valid_assemblies;
+	int total_spatial_bins;
 } Reactor_Mesh;
 
 // Function Prototypes

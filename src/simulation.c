@@ -19,16 +19,12 @@ void run_history_based_simulation(Inputs in, double *** restrict tallies, int * 
 
 			// Determine which assembly it is in
 			int assembly = find_assembly_id( RM, location ); 
-			//int assembly = rni(&seed) % in.assemblies; 
 
 			// Determine which bin it is in
 			int bin = find_pin_id( RM, assembly, location );
-			//int bin = rni(&seed) % in.bins_per_assembly;
 
 			// Determine which material it is in
-			//int mat = pick_mat(&seed); 
-			//TODO: read from reactor mesh instead
-			int mat = spatial_mats[assembly][bin];
+			int mat = RM->assemblies[assembly].material_ids[0][bin];
 
 			// Pick phi
 			double phi = rn(&seed);
