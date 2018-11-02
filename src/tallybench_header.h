@@ -32,6 +32,26 @@ typedef struct{
 	int save_tallies;
 } Inputs;
 
+typedef struct{
+	double x;
+	doubly y;
+} Coord;
+
+typedef struct{
+	int N;
+	int ** material_ids;
+	double pin_pitch;
+	Coord lower_left;
+} Assembly_mesh;
+
+typedef struct{
+	int N;
+	int ** assembly_ids;
+	double assembly_pitch;
+	Assembly_Mesh * assemblies;
+	Coord lower_left;
+} Reactor_Mesh;
+
 // Function Prototypes
 
 // simulation.c
