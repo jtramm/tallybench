@@ -7,6 +7,7 @@ OPTIMIZE    = yes
 OPENMP      = yes
 DEBUG       = yes
 PROFILE     = no
+TEST        = no
 
 #===============================================================================
 # Program name & source code list
@@ -40,6 +41,7 @@ endif
 # Intel Compiler
 ifeq ($(COMPILER),intel)
   CC = icc
+  CFLAGS += -ipo
   ifeq ($(OPENMP),yes)
     CFLAGS += -qopenmp -DOPENMP
   endif
@@ -50,6 +52,11 @@ endif
 ifeq ($(DEBUG),yes)
   CFLAGS += -g
   LDFLAGS  += -g
+endif
+
+# Test Flags
+ifeq ($(TEST),yes)
+  CFLAGS += -DTEST
 endif
 
 # Profiling Flags

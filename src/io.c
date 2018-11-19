@@ -69,11 +69,11 @@ void print_results( Inputs in, int mype, double runtime, int nprocs, unsigned lo
 	printf("Runtime:      %.3lf seconds\n", runtime);
 	printf("Tallies/s:    %.2le\n", (double)in.total_tallies/runtime);
 	printf("Checksum:     %llu", vhash);
-	unsigned long long expected = 47979;
+	unsigned long long expected = 377481;
 	if( in.default_problem == MEDIUM )
-		expected = 11692;
+		expected = 909294;
 	else if( in.default_problem == LARGE )
-		expected = 283547;
+		expected = 422112;
 	if( vhash == expected )
 		printf(" (passed)\n");
 	else
@@ -102,9 +102,9 @@ void print_inputs(Inputs in, int nprocs, int version )
 	printf("Materials:                    %d\n", 12);
 	printf("Total Nuclides:               %d\n", in.isotopes);
 	printf("Reactor Assemblies:           %d\n", in.assemblies);
-	printf("Spatial Bins per Assembly:    %d\n", in.bins_per_assembly);
-	printf("Total Spatial bins:           "); fancy_int((unsigned long) in.assemblies * (unsigned long) in.bins_per_assembly);
-	printf("Total Tally bins:             "); fancy_int((unsigned long) in.assemblies * (unsigned long) in.bins_per_assembly * in.isotopes);
+	printf("Spatial Bins per Assembly:    %d\n", 17*17 * in.axial_regions);
+	printf("Total Spatial bins:           "); fancy_int((unsigned long) in.assemblies * (unsigned long) 17 * 17 * in.axial_regions);
+	printf("Total Tally bins:             "); fancy_int((unsigned long) in.assemblies * (unsigned long) 17 * 17 * in.axial_regions * (unsigned long) in.isotopes);
 	if( in.simulation_method == HISTORY_BASED )
 	{
 	printf("Particle Histories:           "); fancy_int(in.particles);
@@ -182,7 +182,7 @@ Inputs read_CLI( int argc, char * argv[] )
 	input.particles = 500000;
 
 	input.assemblies = 241;
-	input.bins_per_assembly = 17*17;
+	input.axial_regions = 1;
 
 	// defaults to 98
 	input.events_per_particle = 98;
@@ -252,14 +252,14 @@ Inputs read_CLI( int argc, char * argv[] )
 				input.default_problem = MEDIUM;
 				if( !custom_particles )
 					input.particles *= 10;
-				input.bins_per_assembly = 17*17*35;
+				input.axial_regions = 35;
 			}
 			else if( strcmp(prob_size, "large") == 0 )
 			{
 				input.default_problem = LARGE;
 				if( !custom_particles )
 					input.particles *= 100;
-				input.bins_per_assembly = 17*17*350;
+				input.axial_regions = 350;
 			}
 			else
 				print_CLI_error();

@@ -84,6 +84,38 @@ double *** d3darr_contiguous(size_t l, size_t m, size_t n)
     return matrix;
 }
 
+unsigned long *** ul3darr_contiguous(size_t l, size_t m, size_t n)
+{
+    int i, j;
+    unsigned long *inner = calloc(l*m*n,sizeof(unsigned long));
+	assert(inner != NULL );
+    unsigned long **middle = malloc(l*m*sizeof(unsigned long*));
+	assert(middle != NULL);
+    unsigned long ***matrix = malloc(l*sizeof(unsigned long**));
+	assert(matrix != NULL);
+
+    for(i=0; i<l; i++){
+        matrix[i] = middle;
+        middle += m;
+        for(j=0; j<m; j++){
+            matrix[i][j] = inner;
+            inner += n;
+        }
+    }
+    return matrix;
+}
+
+unsigned long ** ul2arr_contiguous(size_t m, size_t n)
+{
+	unsigned long i;
+	unsigned long **a = (unsigned long **) malloc(m*sizeof(unsigned long*));
+	unsigned long *b = (unsigned long *) calloc(n*m,sizeof(unsigned long));
+	for(i=0; i<m; i++){
+		a[i] = b+n*i;
+	}
+	return a;
+}
+
 // Park & Miller Multiplicative Conguential Algorithm
 // From "Numerical Recipes" Second Edition
 double rn(unsigned long * seed)
@@ -124,7 +156,7 @@ unsigned int hash(char *str, int nbins)
 double estimate_mem_usage( Inputs in )
 {
 	// Number of tally elements
-	size_t memtotal = (size_t) in.assemblies * (size_t) in.bins_per_assembly * (size_t) in.isotopes;
+	size_t memtotal = (size_t) in.assemblies * (size_t) 17 * 17 * in.axial_regions * (size_t) in.isotopes;
 
 	// In bytes
 	memtotal *= sizeof(double);

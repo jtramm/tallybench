@@ -31,8 +31,12 @@ int main( int argc, char* argv[] )
 	int *num_nucs  = load_num_nucs(in.isotopes);
 	int **mats     = load_mats(num_nucs, in.isotopes);
 	double **concs = load_concs(num_nucs, &seed);
-	Reactor_Mesh * RM = build_reactor_mesh();
-	double *** tallies = d3darr_contiguous(RM->valid_assemblies, RM->assemblies[0].N * RM->assemblies[0].N, in.isotopes);
+	Reactor_Mesh * RM = build_reactor_mesh(in.axial_regions);
+	double *** tallies = d3darr_contiguous(RM->valid_assemblies, RM->assemblies[0].N * RM->assemblies[0].N * RM->axial_regions, in.isotopes);
+	unsigned long ** tally_hits;
+	#ifdef TEST
+	tally_hits = ul2arr_contiguous(RM->valid_assemblies, RM->assemblies[0].N * RM->assemblies[0].N * RM->axial_regions);
+	#endif
 	//int ** spatial_mats = initialize_spatial_mats(in, mats);
 	int ** spatial_mats = NULL;
 
@@ -52,7 +56,7 @@ int main( int argc, char* argv[] )
 	{
 	}
 	else if( in.simulation_method == HISTORY_BASED )
-		run_history_based_simulation(in, tallies, num_nucs, mats, concs, spatial_mats, RM );
+		run_history_based_simulation(in, tallies, num_nucs, mats, concs, spatial_mats, RM, tally_hits );
 
 	printf("Simulation complete.\n" );
 
@@ -75,6 +79,15 @@ int main( int argc, char* argv[] )
 
 	if( in.save_tallies )
 		save_tallies(tallies, in.assemblies, in.bins_per_assembly, in.isotopes);  
+
+	// Print distribution test results, if specified
+	#ifdef TEST
+	FILE * fp = fopen("distro.dat", "w");
+	for( long i = 0; i < (long) in.assemblies * (long) 17 * (long) 17 * (long) in.axial_regions; i++ )
+		fprintf(fp, "%lu\n", tally_hits[0][i]);
+	fclose(fp);
+	#endif
+
 
 	// Free stuff
 	free(num_nucs);

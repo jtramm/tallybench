@@ -10,6 +10,7 @@ Coord sample_random_location( Reactor_Mesh * RM, unsigned long * seed )
 	Coord loc;
 	loc.x = AM->lower_left.x + rn(seed) * AM->N * AM->pin_pitch;
 	loc.y = AM->lower_left.y + rn(seed) * AM->N * AM->pin_pitch;
+	loc.z = AM->lower_left.z + rn(seed) * RM->height;
 
 	return loc;
 }
@@ -32,6 +33,16 @@ long find_pin_id( Reactor_Mesh * RM, int assembly_id, Coord p )
 	return pin_id;
 }
 
+long find_axial_id( Reactor_Mesh * RM, Coord p )
+{
+	double delta = RM->height / RM->axial_regions;
+
+	// Intentional floor
+	long bin = p.z / delta;
+
+	return bin;
+}
+
 long find_assembly_id( Reactor_Mesh * RM, Coord p )
 {
 	// Find coordinates (intentional floor via cast)
@@ -44,14 +55,17 @@ long find_assembly_id( Reactor_Mesh * RM, Coord p )
 	return assembly_id;
 }
 
-Reactor_Mesh * build_reactor_mesh(void)
+Reactor_Mesh * build_reactor_mesh(int axial_regions)
 {
 	Reactor_Mesh * RM = malloc(sizeof(Reactor_Mesh));
 
 	RM->N = 17;
 	RM->lower_left.x = 0.0;
 	RM->lower_left.y = 0.0;
+	RM->lower_left.z = 0.0;
 	RM->assembly_pitch = 17*1.26;
+	RM->axial_regions = axial_regions;
+	RM->height = 400.0;
 
 	RM->assembly_ids = imatrix(RM->N, RM->N); 
 

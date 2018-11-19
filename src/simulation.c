@@ -1,10 +1,10 @@
 #include "tallybench_header.h"
 
-void run_history_based_simulation(Inputs in, double *** restrict tallies, int * restrict num_nucs, int ** restrict mats, double ** restrict concs, int ** restrict spatial_mats, Reactor_Mesh * restrict RM)
+void run_history_based_simulation(Inputs in, double *** restrict tallies, int * restrict num_nucs, int ** restrict mats, double ** restrict concs, int ** restrict spatial_mats, Reactor_Mesh * restrict RM, unsigned long ** restrict tally_hits)
 {
 
 	// Particle History Loop
-	#pragma omp parallel for schedule(dynamic, 100)
+	#pragma omp parallel for schedule(static)
 	for( int p = 0; p < in.particles; p++ )
 	{
 		unsigned long seed = ((unsigned long) p+ (unsigned long)1)* (unsigned long) 13371337;
@@ -20,11 +20,16 @@ void run_history_based_simulation(Inputs in, double *** restrict tallies, int * 
 			// Determine which assembly it is in
 			int assembly = find_assembly_id( RM, location ); 
 
-			// Determine which bin it is in
-			int bin = find_pin_id( RM, assembly, location );
+			// Determine which pin it is in
+			int pin = find_pin_id( RM, assembly, location );
 
-			// Determine which material it is in
-			int mat = RM->assemblies[assembly].material_ids[0][bin];
+			// Determine which axial location of the pin it is in, and therefore
+			// which final tally bin should be accessed
+			int axial_id = find_axial_id(RM, location);
+			int bin = pin * RM->axial_regions + axial_id;
+
+			// Determine which material it is in (determined by pin)
+			int mat = RM->assemblies[assembly].material_ids[0][pin];
 
 			// Pick phi
 			double phi = rn(&seed);
@@ -60,6 +65,10 @@ void run_history_based_simulation(Inputs in, double *** restrict tallies, int * 
 				// Accumulate score
 				total_score += score;
 			}
+			#ifdef TEST
+			#pragma omp atomic
+			tally_hits[assembly][bin]++;
+			#endif
 
 			// Reduce particle weight based on score
 			weight *= 1.0/total_score;
