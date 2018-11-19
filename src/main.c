@@ -64,7 +64,7 @@ int main( int argc, char* argv[] )
 	
 	// Compute Verification Hash
 	printf("Verifying results...\n");
-	long total_bins = (long) in.assemblies * (long) in.bins_per_assembly * (long) in.isotopes;
+	long total_bins = (long) RM->total_spatial_bins * (long) in.isotopes;
 	double total = parallel_pairwise_sum_dbl( tallies[0][0], total_bins, in.threads );
 	//double total = parallel_sum(tallies[0][0], total_bins);
 	unsigned long long vhash = (unsigned long) total;

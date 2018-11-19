@@ -69,9 +69,9 @@ void print_results( Inputs in, int mype, double runtime, int nprocs, unsigned lo
 	printf("Runtime:      %.3lf seconds\n", runtime);
 	printf("Tallies/s:    %.2le\n", (double)in.total_tallies/runtime);
 	printf("Checksum:     %llu", vhash);
-	unsigned long long expected = 103752;
+	unsigned long long expected = 47979;
 	if( in.default_problem == MEDIUM )
-		expected = 566873;
+		expected = 11692;
 	else if( in.default_problem == LARGE )
 		expected = 283547;
 	if( vhash == expected )

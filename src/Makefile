@@ -74,7 +74,7 @@ $(program): $(obj) tallybench_header.h Makefile
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -rf $(program) $(obj)
+	rm -rf $(program) $(obj) tallybench.dSYM
 
 edit:
 	vim -p $(source) tallybench_header.h

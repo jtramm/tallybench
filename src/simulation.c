@@ -14,7 +14,7 @@ void run_history_based_simulation(Inputs in, double *** restrict tallies, int * 
 		// Tally Loop
 		for( int e = 0; e < in.events_per_particle; e++ )
 		{
-			// Sample location randomly from reactor mesh
+			// Sample Cartesian location randomly from somewhere inside reactor mesh
 			Coord location = sample_random_location( RM, &seed );
 
 			// Determine which assembly it is in
@@ -39,6 +39,7 @@ void run_history_based_simulation(Inputs in, double *** restrict tallies, int * 
 				int idx = mats[mat][n]; 
 
 				// TODO: look this up based on material and nuclide (?)
+				// This is covered by XSbench & RSBench (micro_xs would be cached)
 				double micro_xs = rn(&seed);
 
 				// Look up nuclide density in material
