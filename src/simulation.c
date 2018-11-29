@@ -45,12 +45,21 @@ void run_history_based_simulation(Inputs in, double *** restrict tallies, int * 
 
 				// TODO: look this up based on material and nuclide (?)
 				// This is covered by XSbench & RSBench (micro_xs would be cached)
+				// In OpenMC, micro_xs is a global array (of length n_nuclides) that is
+				// unique to each thread (i.e., threadprivate). In the event based model,
+				// this would have to be changed so that the cache was stored along
+				// with the particle. The data is stored as an array of structs.
+				//
+				// SO: in the history based model, I would just 
+				//
 				double micro_xs = rn(&seed);
 
 				// Look up nuclide density in material
 				double rho = concs[mat][n];
 
 				// Compute Score
+				// In OpenMC, this is computed as: micro_xs[nuclide_id].total * atom_density * flux
+				// with flux = particle_weight * distance_travelled
 				double score = micro_xs * rho * phi * weight;
 				//printf("micro_xs = %lf rho = %lf phi = %lf weight = %lf\n", micro_xs, rho, phi, weight);
 				//printf("tallying score = %lf\n", score);
